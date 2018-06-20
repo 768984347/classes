@@ -114,6 +114,7 @@ class Download
     protected function outputFile($file)
     {
         if (is_resource($file)) {
+            ob_clean(); //清空缓冲区
             file_put_contents('php://output', $file);
         }
         return;
