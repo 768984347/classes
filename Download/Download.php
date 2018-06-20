@@ -1,4 +1,5 @@
 <?php
+namespace Download;
 /**
  * Created by PhpStorm.
  * User: pxb
@@ -28,7 +29,7 @@ class Download
 
     public function __construct()
     {
-        ob_start();
+        ob_start(); //打开输出缓冲控制
     }
 
     /**

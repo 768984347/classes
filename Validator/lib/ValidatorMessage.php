@@ -1,4 +1,8 @@
 <?php
+namespace Validator\Lib;
+
+use Closure;
+
 /**
  * Created by PhpStorm.
  * User: pxb

@@ -1,4 +1,10 @@
 <?php
+namespace Validator;
+
+use Closure;
+use Validator\Lib\ValidatorMessage;
+use Validator\Lib\ValidatorRule;
+
 /**
  * Created by PhpStorm.
  * User: pxb
