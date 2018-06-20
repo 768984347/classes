@@ -6,6 +6,8 @@
  * Time: 17:00
  */
 
+require (dirname(__FILE__).'/ClassesAutoload.php');
+
 class InitAutoload extends ClassesAutoload
 {
     public function getClassPath()
