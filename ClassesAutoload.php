@@ -23,7 +23,7 @@ abstract class ClassesAutoload
     public function newLoader($class_name)
     {
         $class_name = $this->getClassPath().'/'.$class_name.'.php';
-        $class_name = str_replace('\\', '/', $class_name);
+        $class_name = str_replace('\\', DIRECTORY_SEPARATOR, $class_name);
         file_exists($class_name) && require ($class_name);
     }
 

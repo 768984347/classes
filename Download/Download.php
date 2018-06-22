@@ -11,14 +11,14 @@ namespace Download;
  * 下载类
  * @example
  *     $download = new Download();
- *     $download->setFile('/file_path')->setFileName('text.txt')->start();
+ *     $download->setFile('/file_path')->setDownloadFileName('text.txt')->start();
  *
  *     $file = file_get_contents('./img/test.jpg');
- *     $download->setFile($file)->setFileName('text.txt')->start();
+ *     $download->setFile($file)->setDownloadFileName('text.txt')->start();
  *  如果是非文件类型
  *     $download = new Download();
  *     echo 123;
- *     $download->setFileName('test.txt')->start();
+ *     $download->setDownloadFileName('test.txt')->start();
  * Class Download
  */
 class Download
@@ -33,18 +33,19 @@ class Download
     }
 
     /**
-     * 设置文件地址或者资源句柄
-     * @param $file //resource or string
+     * 设置文件地址或者文件字符串
+     * @param $file string
      * @return $this
      */
     public function setFile($file)
     {
-        if (is_resource($file)) {
-            $this->file = $file;
-        } elseif (file_exists($file) && ! is_dir($file)) {
+        if (file_exists($file) && ! is_dir($file)) {
+            $this->setDownloadFileName($file);
             $this->file = file_get_contents($file);
+        } elseif (is_string($file)) {
+            $this->file = $file;
         }
-        $this->outputFile($file);
+        $this->outputFile($this->file);
         return $this;
     }
 
@@ -81,7 +82,7 @@ class Download
      * @param $file_name
      * @return $this
      */
-    public function setFileName($file_name)
+    public function setDownloadFileName($file_name)
     {
         $this->file_name = $file_name;
         return $this;
@@ -93,7 +94,7 @@ class Download
      */
     public function getFileName()
     {
-        return $this->file_name;
+        return pathinfo($this->file_name, PATHINFO_BASENAME);
     }
 
     /**
@@ -114,7 +115,7 @@ class Download
      */
     protected function outputFile($file)
     {
-        if (is_resource($file)) {
+        if (is_string($file)) {
             ob_clean(); //清空缓冲区
             file_put_contents('php://output', $file);
         }
