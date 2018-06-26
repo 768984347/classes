@@ -42,7 +42,7 @@ class Validator
      * @param array $error_message
      * @param Closure|null $callback
      */
-    public function __construct(array $data, array $validate, array $error_message, Closure $callback = null)
+    public function __construct(array $data, array $validate = [], array $error_message = [], Closure $callback = null)
     {
         $this->data = $data;
         $this->validate = $validate;

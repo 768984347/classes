@@ -44,7 +44,7 @@ class ValidatorRule
         // TODO: Implement __call() method.
         //如果满足自定义规则
         if (isset($this->rules[$name]) && $this->rules[$name] instanceof Closure) {
-            return $this->rules[$name]($arguments);
+            return $this->rules[$name]($arguments[0], $arguments[1]);
         }
         return true;
     }
