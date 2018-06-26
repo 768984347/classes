@@ -33,7 +33,7 @@ class Download
     }
 
     /**
-     * 设置文件地址或者文件字符串
+     * 设置文件绝对路径或者字符串
      * @param $file string
      * @return $this
      */
@@ -66,7 +66,7 @@ class Download
     }
 
     /**
-     * 获取文件大小
+     * 获取下载文件大小
      * @return int
      */
     public function getFileSize()
@@ -98,7 +98,7 @@ class Download
     }
 
     /**
-     * 获取文件资源句柄
+     * 获取文件内容
      * @return mixed
      */
     public function getFile()
@@ -110,7 +110,7 @@ class Download
     }
 
     /**
-     * 把文件放置到输出流中
+     * 把文件输出到输出流中
      * @param $file
      */
     protected function outputFile($file)
