@@ -53,14 +53,15 @@ class Download
      * 开始下载
      * @return $this
      */
-    public function start()
+    public function start($gzip = false)
     {
-        $size = $this->getFileSize();
-        $file_name = $this->getFileName();
-        header("Content-type: application/octet-stream;charset=utf8");
-        header("Accept-Ranges: bytes");
-        header("Accept-Length: $size");
-        header("Content-Disposition: attachment; filename=".$file_name);
+        if ($gzip) {
+            $this->file = gzencode($this->getFile());
+            $this->outputFile($this->file);
+            $this->setGzipHeader();
+        } else {
+            $this->setCommonHeader();
+        }
         ob_end_flush();
         return $this;
     }
@@ -116,9 +117,28 @@ class Download
     protected function outputFile($file)
     {
         if (is_string($file)) {
-            ob_clean(); //清空缓冲区
+            ob_clean();
             file_put_contents('php://output', $file);
         }
         return;
+    }
+
+    protected function setCommonHeader()
+    {
+        header("Content-type: application/octet-stream;charset=utf8");
+        header("Accept-Ranges: bytes");
+        header("Accept-Length: ".$this->getFileSize());
+        header("Content-Disposition: attachment; filename=".$this->getFileName());
+        header('Cache-Control: no-store');
+    }
+
+    protected function setGzipHeader()
+    {
+        header('Content-Type: application/x-download');
+        header('Content-Encoding: gzip');
+        header("Accept-Ranges: bytes");
+        header('Content-Length: '.$this->getFileSize());
+        header('Content-Disposition: attachment; filename='.$this->getFileName());
+        header('Cache-Control: no-store');
     }
 }
