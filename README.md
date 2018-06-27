@@ -12,7 +12,8 @@ php >= 5.6.3
     $download = new \Download\Download();
     
     
-##类库
+# 类库
+
 File类 <br/>
 <pre><code>
 $file = new \File\File('./test.txt');
@@ -127,6 +128,12 @@ var_dump($v->errors());
                 string(5) "hello"
         }
     }
+    
+验证规则:
+   1.required (不能为空)
+   2.mobile (手机)
+   3.plane (座机)
+   3.phone (手机 或者 座机)
 </code></pre>
 
 
