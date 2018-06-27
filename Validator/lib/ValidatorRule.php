@@ -48,4 +48,16 @@ class ValidatorRule
         }
         return true;
     }
+
+    public function mobile($key, $data)
+    {
+        $pattern = '/^1[3,4,5,7,8]\d{9}$/';
+        return isset($data[$key]) && preg_match($pattern, $data[$key]);
+    }
+
+    public function phone($key, $data)
+    {
+        $pattern = '/^(0[0-9]{2,3}[-]{0,})?([2-9][0-9]{6,7})+(\-[0-9]{1,4})?$/';
+        return $this->mobile($key, $data) || (isset($data[$key]) && preg_match($pattern, $data[$key]));
+    }
 }
