@@ -189,7 +189,7 @@ class File
     }
 
     /**
-     * 文件信息是否设置（文件是否是存在的）
+     * 文件信息是否设置
      * @param $file_info
      * @return bool
      */
