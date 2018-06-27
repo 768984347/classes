@@ -49,15 +49,38 @@ class ValidatorRule
         return true;
     }
 
+    /**
+     * 验证手机
+     * @param $key
+     * @param $data
+     * @return bool
+     */
     public function mobile($key, $data)
     {
         $pattern = '/^1[3,4,5,7,8]\d{9}$/';
         return isset($data[$key]) && preg_match($pattern, $data[$key]);
     }
 
-    public function phone($key, $data)
+    /**
+     * 验证座机
+     * @param $key
+     * @param $data
+     * @return bool
+     */
+    public function plane($key, $data)
     {
         $pattern = '/^(0[0-9]{2,3}[-]{0,})?([2-9][0-9]{6,7})+(\-[0-9]{1,4})?$/';
-        return $this->mobile($key, $data) || (isset($data[$key]) && preg_match($pattern, $data[$key]));
+        return isset($data[$key]) && preg_match($pattern, $data[$key]);
+    }
+
+    /**
+     * 验证座机或者手机
+     * @param $key
+     * @param $data
+     * @return bool
+     */
+    public function phone($key, $data)
+    {
+        return $this->mobile($key, $data) || $this->plane($key, $data);
     }
 }
