@@ -30,6 +30,14 @@ $file->save();
 $file = new \File\File();
 $file->save('/home/www/test.txt', 'this is test.txt');
 
+  其他方法
+  $file->getFileName();
+  $file->getFileExtension();
+  $file->getFileDir();
+  $file->getFileBaseName();
+  $file->getFileContent(); //获取文件内容
+  $file->getFileSize(); //获取文件大小
+
 </code></pre>
 
 Download类
@@ -41,6 +49,9 @@ $download->setFile('/file_path')->setDownloadFileName('text.txt')->start();
 $download = new Download();
 $file = file_get_contents('./img/test.jpg');
 $download->setFile($file)->setDownloadFileName('text.txt')->start();
+
+//打开gzip
+$download->setFile($file)->setDownloadFileName('text.txt')->start(true);
 
 //如果是非文件类型
 $download = new Download();
@@ -116,4 +127,44 @@ var_dump($v->errors());
                 string(5) "hello"
         }
     }
+</code></pre>
+
+
+<h4>Request类</h4>
+<pre><code>
+$request = new \Http\Request();
+
+//是否post请求
+$is_post = $request->isPost(); //return bool;
+
+//获取请求方法
+$method = $request->getRequestMethod(); //return string
+
+//获取代理
+$agent = $request->getUserAgent(); //return string
+
+//获取所有数据
+$all = $request->getAll(); //return 数据对象
+
+//获取部分数据 （不存在不返回）
+$only = $request->only(['name','age']); //return 数据对象
+
+//获取input数据
+$input = $request->getInput(); //return mixed
+
+
+Request类数据对象方法:
+    //修改别名
+    $all->alias(); //return 数据对象
+    
+    //将数据对象变成数组
+    $all->toArray(); //return array
+    
+    范例:
+    $insert_request = $request->only(['username','age'])
+        ->alias([
+            'username' => 'nickname',
+            'age' => 'my_age'
+        ])
+        ->toArray();
 </code></pre>
