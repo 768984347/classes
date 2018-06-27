@@ -134,6 +134,10 @@ var_dump($v->errors());
 <pre><code>
 $request = new \Http\Request();
 
+//获取请求属性
+$username = $request->username;
+$age = $request->age;
+
 //是否post请求
 $is_post = $request->isPost(); //return bool;
 
