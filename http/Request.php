@@ -46,10 +46,13 @@ class Request
             if (is_string($input)) {
                 if ($decode_json = json_decode($input, true))
                     $input = $decode_json;
+                else {
+                    $input = [];
+                }
             }
-            $this->all = array_merge($_REQUEST, $input);
+            $this->all = array_merge($_REQUEST, $input) ?: [];
         }
-        return new RequestDataParse((object)$this->all);
+        return new RequestDataParse($this->all);
     }
 
     public function only(array $filter)
