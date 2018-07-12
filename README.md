@@ -179,3 +179,23 @@ Request类数据对象方法:
         ])
         ->toArray();
 </code></pre>
+
+<h4>Time类</h4>
+简单的时间转换类
+
+<pre><code>
+$time = new Time\Time(1, 0, 0, 0);
+var_dump($time->getDay()); // 1
+var_dump($time->getHour()); // 24
+var_dump($time->getMinute()); // 1440
+var_dump($time->getSecond()); // 86400
+
+$time = new Time\Time(1.5, 0, 0, 0);
+var_dump($time->getAutoTime()); // array(4) { ["day"]=> int(1) ["hour"]=> int(12) ["minute"]=> int(0) ["second"]=> int(0) }
+
+$time = new Time\Time();
+$time->setSecond(0);
+$time->setMinute(0);
+$time->setHour(0);
+$time->setDay(1);
+</code></pre>
