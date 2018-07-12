@@ -51,6 +51,11 @@ class Request
                 }
             }
             $this->all = array_merge($_REQUEST, $input) ?: [];
+            //如果是空字符串设置值为null
+            foreach ($this->all as $key => $value) {
+                if ((! is_numeric($value)) && empty($value))
+                    $this->all[$key] = null;
+            }
         }
         return new RequestDataParse($this->all);
     }
