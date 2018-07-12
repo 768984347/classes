@@ -119,21 +119,21 @@ class Time
         $one_day = self::MINUTE_SECOND * self::HOUR_MINUTE * self::DAY_HOUR;
         $one_hour = self::MINUTE_SECOND * self::HOUR_MINUTE;
         $one_minute = self::MINUTE_SECOND;
-        if ($second_sum > $one_day) {
+        if ($second_sum >= $one_day) {
             $auto_time['day'] = (int)(string)($second_sum / $one_day);
             $second_sum = $second_sum % $one_day;
         } else {
             $auto_time['day'] = 0;
         }
 
-        if ($second_sum > $one_hour) {
+        if ($second_sum >= $one_hour) {
             $auto_time['hour'] = (int)(string)($second_sum / $one_hour);
             $second_sum = $second_sum % $one_hour;
         } else {
             $auto_time['hour'] = 0;
         }
 
-        if ($second_sum > $one_minute) {
+        if ($second_sum >= $one_minute) {
             $auto_time['minute'] = (int)(string)($second_sum / $one_minute);
             $second_sum = $second_sum % $one_minute;
         } else {
