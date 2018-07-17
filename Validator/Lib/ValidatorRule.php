@@ -13,14 +13,22 @@ use Closure;
 class ValidatorRule
 {
     protected $rules = []; //自定义规则
+    protected $data = [];
+
+    public function setValidateData(array $data)
+    {
+        $this->data = $data;
+        return $this;
+    }
+
     /**
      * 验证数组元素不能为空或者不存在
      * @param $key
      * @return bool
      */
-    public function required($key, $data)
+    public function required($key)
     {
-        return isset($data[$key]) && !empty($data[$key]);
+        return ! empty($this->data[$key]);
     }
 
     /**
@@ -44,7 +52,7 @@ class ValidatorRule
         // TODO: Implement __call() method.
         //如果满足自定义规则
         if (isset($this->rules[$name]) && $this->rules[$name] instanceof Closure) {
-            return $this->rules[$name]($arguments[0], $arguments[1]);
+            return $this->rules[$name]($arguments[0]);
         }
         return true;
     }
@@ -55,10 +63,10 @@ class ValidatorRule
      * @param $data
      * @return bool
      */
-    public function mobile($key, $data)
+    public function mobile($key)
     {
         $pattern = '/^1[3,4,5,7,8]\d{9}$/';
-        return isset($data[$key]) && preg_match($pattern, $data[$key]);
+        return isset($this->data[$key]) && preg_match($pattern, $this->data[$key]);
     }
 
     /**
@@ -67,10 +75,10 @@ class ValidatorRule
      * @param $data
      * @return bool
      */
-    public function plane($key, $data)
+    public function plane($key)
     {
         $pattern = '/^(0[0-9]{2,3}[-]{0,})?([2-9][0-9]{6,7})+(\-[0-9]{1,4})?$/';
-        return isset($data[$key]) && preg_match($pattern, $data[$key]);
+        return isset($this->data[$key]) && preg_match($pattern, $this->data[$key]);
     }
 
     /**
@@ -79,8 +87,61 @@ class ValidatorRule
      * @param $data
      * @return bool
      */
-    public function phone($key, $data)
+    public function phone($key)
     {
-        return $this->mobile($key, $data) || $this->plane($key, $data);
+        return $this->mobile($key) || $this->plane($key);
+    }
+
+    /**
+     * 判断是否是上传的文件
+     * @param $key
+     * @return bool
+     */
+    public function file($key)
+    {
+        if (is_array($_FILES[$key]['tmp_name'])) {
+            foreach ($_FILES[$key]['tmp_name'] as $no => $tmp_name) {
+                if (! is_uploaded_file($tmp_name) || $_FILES[$key][$no] !== 0)
+                    return false;
+            }
+        } else {
+            return is_uploaded_file($_FILES[$key]['tmp_name']) && $_FILES[$key]['error'] === 0;
+        }
+        return true;
+    }
+
+    protected function jpg($mime)
+    {
+        return $mime === 'image/jpeg';
+    }
+
+    public function extension($key, $extension_array)
+    {
+        $class_method = get_class_methods(get_class());
+        $extension_array = explode($this->getExplodeMethodParamSign(), $extension_array);
+        $mime = null;
+        if ($this->file($key)) {
+            if (is_array($_FILES[$key]['type']))
+                $mime = $_FILES[$key]['type'];
+            else
+                $mime = [$_FILES[$key]['type']];
+        } elseif (is_file($this->data[$key])) {
+            $mime = [$this];
+        }
+        foreach ($extension_array as $extension) {
+            if (in_array($extension, $class_method) && $mime) {
+                foreach ($mime as $file_mime) {
+                    if (! call_user_func([$this, $extension], $file_mime))
+                        break;
+                }
+                return true;
+            }
+        }
+        return false;
+    }
+
+    protected function getExplodeMethodParamSign()
+    {
+        return ',';
     }
 }

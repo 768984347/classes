@@ -28,7 +28,7 @@ use Validator\Lib\ValidatorRule;
  */
 class Validator
 {
-    public $data; //要验证的数据
+//    public $data; //要验证的数据
     public $validate; //验证数据的规则
     public $error_message; //验证失败的错误信息
     private $errors; //验证失败返回的完整错误信息
@@ -44,7 +44,7 @@ class Validator
      */
     public function __construct(array $data, array $validate = [], array $error_message = [], Closure $callback = null)
     {
-        $this->data = $data;
+//        $this->data = $data;
         $this->validate = $validate;
         //初始化错误信息数组
         $this->error_message = $this->parseErrorMessage($error_message);
@@ -55,6 +55,7 @@ class Validator
 
         //初始化依赖对象
         $this->initValidatorObj();
+        $this->rule_obj->setValidateData($data);
         //验证
         $this->validate();
     }
@@ -101,9 +102,15 @@ class Validator
     {
         if (! empty($this->validate)) {
             foreach ($this->validate as $key => $item) {
+                $param = [];
                 $validate_arr = explode($this->getValidateExplodeSign(), $item);
                 foreach ($validate_arr as $validate_func_name) {
-                    $suc = $this->rule_obj->$validate_func_name($key, $this->data);
+                    $param[] = $key;
+                    if (strpos($validate_func_name, $this->getMethodParamSign())) {
+                        list($validate_func_name, $method_param) = explode($this->getMethodParamSign(), $validate_func_name);
+                        array_push($param, $method_param);
+                    }
+                    $suc = call_user_func_array([$this->rule_obj, $validate_func_name], $param);
                     if (! $suc) {
                         $this->errors[$key][$validate_func_name] = $this->getErrorMessage($key, $validate_func_name);
                     }
@@ -146,6 +153,15 @@ class Validator
     private function getValidateExplodeSign()
     {
         return '|';
+    }
+
+    /**
+     * 获得给方法传递参数的符号
+     * @return string
+     */
+    private function getMethodParamSign()
+    {
+        return ':';
     }
 
     /**

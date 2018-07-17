@@ -31,6 +31,21 @@ class Request
         return $this->getRequestMethod() === 'POST';
     }
 
+    public function isGet()
+    {
+        return $this->getRequestMethod() === 'GET';
+    }
+
+    public function isPut()
+    {
+        return $this->getRequestMethod() === 'PUT';
+    }
+
+    public function isDelete()
+    {
+        return $this->getRequestMethod() === 'DELETE';
+    }
+
     public function getInput()
     {
         if (empty($this->input)) {
