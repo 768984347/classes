@@ -104,4 +104,18 @@ class Request
             return null;
         }
     }
+
+    /**
+     * 添加此魔术方法原因是在某些情况下需要判断属性是否为空或者存在
+     * 而isset() or empty()会触发的是此__isset魔术方法并不会触发__get
+     * @param $name
+     * @return bool
+     */
+    public function __isset($name)
+    {
+        // TODO: Implement __isset() method.
+        if (isset($this->all[$name]))
+            return true;
+        return false;
+    }
 }
