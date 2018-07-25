@@ -114,7 +114,7 @@ class Request
     public function __isset($name)
     {
         // TODO: Implement __isset() method.
-        if (isset($this->all[$name]))
+        if ($this->getAll()->offsetExists($name))
             return true;
         return false;
     }
