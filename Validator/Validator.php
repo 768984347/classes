@@ -102,7 +102,6 @@ class Validator
     {
         if (! empty($this->validate)) {
             foreach ($this->validate as $key => $item) {
-                $param = [];
                 $validate_arr = explode($this->getValidateExplodeSign(), $item);
                 foreach ($validate_arr as $validate_func_name) {
                     $param[] = $key;
@@ -114,6 +113,7 @@ class Validator
                     if (! $suc) {
                         $this->errors[$key][$validate_func_name] = $this->getErrorMessage($key, $validate_func_name);
                     }
+                    $param = [];
                 }
             }
         }

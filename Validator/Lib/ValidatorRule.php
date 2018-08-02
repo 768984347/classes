@@ -133,6 +133,16 @@ class ValidatorRule
         return $mime === 'image/png';
     }
 
+    protected function zip($mime)
+    {
+        return $mime === 'application/x-zip-compressed';
+    }
+
+    protected function rar($mime)
+    {
+        return $mime === 'application/octet-stream';
+    }
+
     /**
      * 普通文件使用的验证方法
      * @param $key
@@ -216,5 +226,64 @@ class ValidatorRule
     protected function getMethodParam($param_str)
     {
         return explode($this->getExplodeMethodParamSign(), $param_str);
+    }
+
+    /**
+     * 验证是否是数字
+     * @param $key
+     * @return bool
+     */
+    public function number($key)
+    {
+        if (! isset($this->data[$key]) || is_numeric($this->data[$key])) {
+            return true;
+        }
+        return false;
+    }
+
+
+    /**
+     * 验证是否为整数
+     * @param $key
+     * @return bool
+     */
+    public function integer($key)
+    {
+        if (! isset($this->data[$key]) || ($this->number($key) && ($this->data[$key] == (int)$this->data[$key]))) {
+            return true;
+        }
+        return false;
+    }
+
+    public function dateFormat($key, $format)
+    {
+        $data = $this->getMethodParam($format);
+
+        if (isset($this->data[$key])) {
+            foreach ($data as $format) {
+                if (! date_create_from_format($format, $this->data[$key]))
+                    continue;
+                else
+                    return true;
+            }
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * 确认与某个数组元素中的值是否相同
+     * @param $key
+     * @param $same_key
+     * @return bool
+     */
+    public function same($key, $same_key)
+    {
+        if (isset($this->data[$key])) {
+            if ($this->data[$key] === $this->data[$same_key])
+                return true;
+            return false;
+        }
+        return true;
     }
 }
